@@ -1,0 +1,49 @@
+div.video-js.you-are-early .vjs-errors-details,
+div.video-js.you-are-early .vjs-errors-ref-id,
+div.video-js.you-are-early .vjs-errors-content-container div:not([class]),
+div.video-js.you-are-early .vjs-error-display:before {
+  display: none;
+}
+div.video-js.you-are-early .vjs-errors-headline {
+  text-align: center;
+  margin-top: 1em;
+  padding: 0 1em;
+  font-size: 2em;
+  font-family: bryant-web,sans-serif;
+  font-weight: 400;
+  color: #d6a800;
+}
+div.video-js.you-are-early .vjs-errors-ok-button-container button {
+  background: rgba(214,168,0,0.6);
+  color: #000;
+  font-family: bryant-web,sans-serif;
+  font-weight: 300;
+}
+div.video-js.you-are-early button.vjs-close-button {
+  background: rgba(214,168,0,0.6);
+}
+div.video-js.you-are-early .vjs-errors-dialog {
+  background: rgba(24,24,24,.9);
+}
+
+@media screen and (min-width: 768px) and (max-width: 800px){
+  div.video-js.you-are-early .vjs-errors-headline {
+    font-size: 1.5em;
+  }
+}
+
+@media screen and (max-width: 640px){
+  div.video-js.you-are-early .vjs-errors-headline {
+    font-size: 1.5em;
+  }
+}
+@media screen and (max-width: 500px){
+  div.video-js.you-are-early .vjs-errors-headline {
+    font-size: 1.3em;
+  }
+}
+@media screen and (max-width: 400px){
+  div.video-js.you-are-early .vjs-errors-headline {
+    font-size: 1em;
+  }
+}

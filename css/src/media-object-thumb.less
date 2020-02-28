@@ -1,0 +1,44 @@
+@import "vars.less";
+.pod {
+  .explo-media-object-thumb,
+  .explo-media-object-thumb-control {
+     margin-bottom: 0.750em;
+    img {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.explo-media-object-thumb,
+.explo-media-object-thumb-control {
+  .play-icon-mixin();
+  .play-icon-animation-mixin();
+  background: inherit;
+  > a > img {
+    width: 100%;
+  }
+
+
+  &.media-control {
+    .image {
+      width: 20%;
+    }
+    .title {
+      width: 80%;
+    }
+  }
+}
+.explo-media-object-thumb {
+  background: #e3e3e3;
+  @media screen and (min-width: 768px) {
+    min-height: 120px;
+    > a > img {
+      min-height: 120px;
+    }
+  }
+}
+.explo-media-object-thumb-control {
+  .image {
+    position: relative;
+  }
+}

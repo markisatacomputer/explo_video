@@ -1,0 +1,20 @@
+name = "Explo Video Customizations"
+description = "Customizations and overrides for the /video section"
+package = "Explo"
+core = 7.x
+dependencies[] = image
+
+files[] = classes/MediaObject.php
+files[] = classes/MediaObjectBrightcove.php
+files[] = classes/MediaObjectYoutube.php
+files[] = classes/MediaObjectVimeo.php
+files[] = classes/MediaObjectFlv.php
+files[] = classes/MediaObjectMp3.php
+files[] = classes/MediaObjectSoundcloud.php
+
+files[] = views/explo_video.views.inc
+files[] = views/explo_video_handler_thumb.inc
+files[] = views/explo_video_handler_thumb_control.inc
+files[] = views/explo_video_handler_player.inc
+
+version = "7.x-1.0"

@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "browserslist": [
+    "> 0.25% in my stats",
+    "not dead"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "browserslist": "^4.3.7",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0-beta.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "less-plugin-autoprefix": "^2.0.0"
+  }
+}

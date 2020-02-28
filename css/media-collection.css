@@ -1,0 +1,84 @@
+#media-collection-container {
+  position: relative;
+  background-color: #1a1a1a;
+}
+#media-collection-container #media-collection-players {
+  width: 75%;
+}
+#media-collection-container #media-collection-playlist {
+  width: 25%;
+}
+#media-collection-container #media-collection-playlist .playlist-item-hot {
+  background-color: #3a3a3a;
+}
+#media-collection-container #media-collection-playlist .playlist-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#media-collection-container #media-collection-playlist .explo-media-object-thumb-control {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  cursor: pointer;
+  font-size: 0.875em;
+  color: #DDDDDD;
+  padding: 1em 0;
+  border-bottom: 1px solid #333333;
+}
+#media-collection-container #media-collection-playlist .explo-media-object-thumb-control .image {
+  padding: 0 0 0.5em 1.5em;
+}
+#media-collection-container #media-collection-playlist .explo-media-object-thumb-control .title {
+  padding: 0 1.5em;
+  line-height: 1.5em;
+}
+@media screen and (max-width: 768px) {
+  #media-collection-container {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+  #media-collection-container #media-collection-players,
+  #media-collection-container #media-collection-playlist {
+    width: 100%;
+  }
+  #media-collection-container #media-collection-playlist .playlist-container {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    padding: 10px;
+    height: 240px;
+  }
+  #media-collection-container #media-collection-playlist .explo-media-object-thumb-control {
+    width: 100px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    line-height: 1.2em;
+    float: left;
+    height: 220px;
+    overflow-y: hidden;
+    margin-right: 15px;
+    border-bottom: none;
+  }
+  #media-collection-container #media-collection-playlist .explo-media-object-thumb-control .image,
+  #media-collection-container #media-collection-playlist .explo-media-object-thumb-control .title {
+    padding: 0;
+  }
+  @supports (grid-auto-flow: column) {
+    #media-collection-container #media-collection-playlist .playlist-container {
+      height: inherit;
+    }
+    #media-collection-container #media-collection-playlist .explo-media-object-thumb-control {
+      height: inherit;
+    }
+  }
+}
+
+/*# sourceMappingURL=media-collection.css.map */

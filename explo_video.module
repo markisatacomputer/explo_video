@@ -1,0 +1,212 @@
+<?php
+/**
+ * Implements hook_permission().
+ */
+function explo_video_permission() {
+  return array(
+    'administer explo video' => array(
+      'title' => t('Administer Explo Video'),
+      'description' => t('Perform administration tasks for Video section of the Exploratorium website.'),
+    ),
+  );
+}
+/**
+ * Implements hook_menu().
+ */
+function explo_video_menu() {
+  $items['video/collections'] = array(
+    'title' => 'Collections',
+    'page callback' => 'explo_video_collections_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['video/subjects'] = array(
+    'title' => 'Subjects',
+    'page callback' => 'explo_video_subjects_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['video/collections/%explo_video_collection/all'] = array(
+    'title' => 'Taxonomy term',
+    'title callback' => 'taxonomy_term_title',
+    'title arguments' => array(2),
+    'page callback' => 'taxonomy_term_page',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'file' => 'taxonomy.pages.inc',
+    'file path' => 'modules/taxonomy',
+  );
+  $items['admin/content/video'] = array(
+    'title' => 'Explo Video',
+    'description' => 'Configuration of Explo Video sub site.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('explo_video_settings_form'),
+    'access arguments' => array('administer explo video'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/content/video/settings'] = array(
+    'title' => 'Explo Video Settings',
+    'description' => 'Configuration of Explo Video sub site.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('explo_video_settings_form'),
+    'access arguments' => array('administer explo video'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/content/video/settings/autocomplete/%/%/%/%'] = array(
+    'page callback' => 'explo_video_settings_ajax_autocomplete',
+    'page arguments' => array(5,6,7,8),
+    'access arguments' => array('administer explo video'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_views_api
+ */
+function explo_video_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'explo_video') . '/views',
+  );
+}
+
+//  Theme functions are in here:
+module_load_include('inc', 'explo_video', 'theme');
+
+
+//  Filter functions are in here:
+module_load_include('inc', 'explo_video', 'filter');
+
+
+//  Explo Video administration screen functions are in here:
+module_load_include('inc', 'explo_video', 'admin');
+
+/**
+ * Get all available Media Object sources as an array map of [source name] => [source id field name].
+ *
+ * @return array
+ */
+function explo_video_get_sources() {
+  return array(
+    'brightcove' => 'field_brightcove_id',
+    'soundcloud' => 'field_soundcloud_id',
+    'youtube' => 'field_youtube_id',
+    'vimeo' => 'field_vimeo_id',
+    'mp3' => 'field_mp3_url',
+    'flv' => 'field_flv_url',
+  );
+}
+
+/**
+ *    Return a media object node loaded into a media object class according to it's source.
+ *
+ * @param  array   $media_object   media object Drupal node array
+ * @return object                  a MediaObject subclass appropriate to source
+ */
+function explo_video_load($media_object) {
+  $media_object_cache = &drupal_static(__FUNCTION__);
+
+  if (!isset($media_object_cache)) {
+    $media_object_cache = array();
+  }
+  if (!isset($media_object_cache[$media_object->nid])) {
+
+    $mow = entity_metadata_wrapper('node', $media_object);
+    $source = $mow->field_select_media_source->value();
+    $classes = array(
+      'MediaObject' . ucfirst($source),
+      'MediaObject'
+    );
+    foreach ($classes as $class_name) {
+      if (class_exists($class_name)) {
+        $load_class = $class_name;
+        break;
+      }
+    }
+
+    if ($load_class) {
+      $media_object_cache[$media_object->nid] = new $load_class($media_object);
+    } else {
+      watchdog('explo_video', 'class %load_class was not found', array('load_class' => $load_class), WATCHDOG_ERROR, 'link');
+    }
+
+  }
+
+  //  Add Media Object JS
+  $media = $media_object_cache[$media_object->nid];
+  $key = "media-" . $media->source . "-" . $media->id;
+  drupal_add_js(array(
+    'explo_video' => array(
+      $key => $media->getMeta(),
+    ),
+  ), 'setting');
+  drupal_add_js(drupal_get_path('module', 'explo_video') . '/js/media-object.js', array('weight' => -10));
+
+
+  return $media_object_cache[$media_object->nid];
+}
+
+/**
+ *      load correct media series term from argument
+ *          - our trick here is to use the url alias that this url was built from
+ *          - just take away the last bit "/all" and loading the term is easy
+ *      @param  String  $arg  term name argument
+ *      @return Object        taxonomny term object
+ */
+function explo_video_collection_load($arg) {
+  $normal_path = drupal_get_normal_path('video/collections/' . $arg);
+  $term = menu_get_object('taxonomy_term', 2, $normal_path);
+  return $term;
+}
+
+/**
+ *    Media Series Landing page block
+ *      - return all results when '/all' argment added to url
+ *    Media Series term edit
+ *      - limit featured videos to those tagged with current term
+ *    Utilizes hook_views_pre_view.
+ *
+ *        - filter featured video options on media series term edit screen
+ * @param  Object &$view   view object - includes/view.inc
+ */
+function explo_video_views_pre_view(&$view, &$display_id, &$args) {
+  //  Media Series Landing page block
+  if ($view->name == 'video' && $display_id == 'media_series_video_block') {
+    //  include all results when second argument passed
+    if ($args[1]) {
+      $view->set_items_per_page(0);
+    }
+  }
+  //  Media Series term edit
+  if ($view->name == 'video' && $display_id == 'entityreference_1') {
+    $req = explode('/', $_SERVER['REQUEST_URI']);
+    if ($req[1] == 'taxonomy' && $req[2] == 'term' && isset($req[3]) && is_numeric($req[3]) && isset($req[4]) && $req[4] == 'edit') {
+      $args[0] = $req[3];
+    } else {
+      $args[0] = NULL;
+    }
+  }
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function explo_video_date_formats() {
+  return array(
+    // Creates a new format for use in video views.
+    array(
+      'type' => 'explo_video_pod',
+      'format' => 'F j, Y',
+      'locales' => array(),
+    ),
+  );
+}
+/**
+ * Implements hook_date_format_types().
+ */
+function explo_video_date_format_types() {
+  return array(
+    'explo_video_pod' => t('Media Pod: Month 00, 1999'),
+  );
+}

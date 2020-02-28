@@ -1,0 +1,52 @@
+@import "vars.less";
+
+.explo-media-object-player {
+  background: #000;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  > div:not(.contextual-links-wrapper) {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    > div,
+    > iframe,
+    > embed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+    }
+    > iframe,
+    > embed {
+      height: 100%;
+    }
+  }
+
+  .explo-media-object-player-mp3 {
+    position: relative;
+    .border-radius-mixin();
+    .highlight_img {
+      .play-icon-mixin();
+      .media-higlight-mixin();
+      position: absolute;
+      height: 100%;
+    }
+    audio {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
+
+  .warning {
+    background-repeat: no-repeat;
+    p {
+      padding: 2em;
+      width: 50%;
+      margin: auto;
+    }
+  }
+}

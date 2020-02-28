@@ -1,0 +1,70 @@
+.pod .explo-media-object-thumb,
+.pod .explo-media-object-thumb-control {
+  margin-bottom: 0.75em;
+}
+.pod .explo-media-object-thumb img,
+.pod .explo-media-object-thumb-control img {
+  margin-bottom: 0;
+}
+.explo-media-object-thumb,
+.explo-media-object-thumb-control {
+  background: #e3e3e3;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  background: inherit;
+}
+.explo-media-object-thumb .play-icon,
+.explo-media-object-thumb-control .play-icon {
+  position: absolute;
+  width: 30%;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  opacity: 1;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  border: none;
+}
+.explo-media-object-thumb .play-icon img,
+.explo-media-object-thumb-control .play-icon img {
+  border: none;
+  width: 100%;
+  height: auto;
+}
+.explo-media-object-thumb:hover .play-icon,
+.explo-media-object-thumb-control:hover .play-icon {
+  opacity: 0;
+  width: 50%;
+}
+.explo-media-object-thumb > a > img,
+.explo-media-object-thumb-control > a > img {
+  width: 100%;
+}
+.explo-media-object-thumb.media-control .image,
+.explo-media-object-thumb-control.media-control .image {
+  width: 20%;
+}
+.explo-media-object-thumb.media-control .title,
+.explo-media-object-thumb-control.media-control .title {
+  width: 80%;
+}
+.explo-media-object-thumb {
+  background: #e3e3e3;
+}
+@media screen and (min-width: 768px) {
+  .explo-media-object-thumb {
+    min-height: 120px;
+  }
+  .explo-media-object-thumb > a > img {
+    min-height: 120px;
+  }
+}
+.explo-media-object-thumb-control .image {
+  position: relative;
+}
+
+/*# sourceMappingURL=media-object-thumb.css.map */
